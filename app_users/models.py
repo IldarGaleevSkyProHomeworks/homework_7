@@ -4,6 +4,8 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
 
+from utils.hash_storage import user_avatar_images, HashStorage
+
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -43,6 +45,27 @@ class User(AbstractUser):
 
     email = models.EmailField(
         unique=True
+    )
+
+    phone = models.CharField(
+        max_length=24,
+        null=True,
+        blank=True,
+        verbose_name='Телефон',
+    )
+
+    city_name = models.CharField(
+        max_length=150,
+        null=True,
+        blank=True,
+        verbose_name='Город'
+    )
+
+    avatar = models.ImageField(
+        upload_to=user_avatar_images,
+        storage=HashStorage(),
+        null=True,
+        verbose_name='Аватар',
     )
 
     objects = UserManager()
