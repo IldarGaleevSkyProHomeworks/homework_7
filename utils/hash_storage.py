@@ -21,9 +21,9 @@ class HashStorage(FileSystemStorage):
         return name
 
 
-def _get_file_hash_path(root, instance, filename):
-    instance.preview_image.open()
-    context = instance.preview_image.read()
+def _get_file_hash_path(root, ctx, instance, filename):
+    ctx.open()
+    context = ctx.read()
     _, ext = os.path.splitext(filename)
 
     file_path = os.path.join(root, hashlib.md5(context).hexdigest() + ext)
@@ -32,4 +32,8 @@ def _get_file_hash_path(root, instance, filename):
 
 
 def user_avatar_images(instance, filename):
-    return _get_file_hash_path('user_avatar_images', instance, filename)
+    return _get_file_hash_path('user_avatar_images', instance.avatar, instance, filename)
+
+
+def course_preview_images(instance, filename):
+    return _get_file_hash_path('course_preview_images', instance.preview, instance, filename)
