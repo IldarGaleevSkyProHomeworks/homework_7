@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "homework-7-1"
+version = "0.1.0"
+description = ""
+authors = ["Ильдар Галеев <ildar-galeev92@mail.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "4.2.7"
+djangorestframework = "^3.14.0"
+
+
+[tool.poetry.group.dev.dependencies]
+ipython = "^8.21.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
