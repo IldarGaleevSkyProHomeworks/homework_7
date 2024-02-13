@@ -3,7 +3,7 @@ from django.db import models
 from utils.hash_storage import HashStorage, course_preview_images
 
 
-class NamedItemMixin(models.Model):
+class Course(models.Model):
     name = models.CharField(
         max_length=250,
         verbose_name='Название'
@@ -14,11 +14,6 @@ class NamedItemMixin(models.Model):
         verbose_name='Описание'
     )
 
-    class Meta:
-        abstract = True
-
-
-class HasPreviewMixin(models.Model):
     preview = models.ImageField(
         upload_to=course_preview_images,
         storage=HashStorage(),
@@ -27,11 +22,6 @@ class HasPreviewMixin(models.Model):
         verbose_name='Превью',
     )
 
-    class Meta:
-        abstract = True
-
-
-class Course(NamedItemMixin, HasPreviewMixin, models.Model):
     def __str__(self):
         return self.name
 
@@ -40,7 +30,25 @@ class Course(NamedItemMixin, HasPreviewMixin, models.Model):
         verbose_name_plural = 'Курсы'
 
 
-class Lesson(NamedItemMixin, HasPreviewMixin, models.Model):
+class Lesson(models.Model):
+    name = models.CharField(
+        max_length=250,
+        verbose_name='Название'
+    )
+
+    description = models.TextField(
+        max_length=1024,
+        verbose_name='Описание'
+    )
+
+    preview = models.ImageField(
+        upload_to=course_preview_images,
+        storage=HashStorage(),
+        null=True,
+        blank=True,
+        verbose_name='Превью',
+    )
+
     video_url = models.URLField(
         null=True,
         blank=True,
