@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from app_users.models import User
+from app_users.models import User, Payment, PurchasedProduct
 
 
 @admin.register(User)
@@ -22,3 +22,13 @@ class CustomUserAdmin(UserAdmin):
     )
     search_fields = ('first_name', 'last_name', 'email')
     ordering = ('date_joined',)
+
+
+@admin.register(Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(PurchasedProduct)
+class PurchasedProductAdmin(admin.ModelAdmin):
+    pass
