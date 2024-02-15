@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from app_users.models import User, Payment, PurchasedProduct
+from app_users.models import User, Payment
 
 
 @admin.register(User)
@@ -26,9 +26,4 @@ class CustomUserAdmin(UserAdmin):
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(PurchasedProduct)
-class PurchasedProductAdmin(admin.ModelAdmin):
     pass
