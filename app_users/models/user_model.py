@@ -65,6 +65,7 @@ class User(AbstractUser):
         upload_to=user_avatar_images,
         storage=HashStorage(),
         null=True,
+        blank=True,
         verbose_name='Аватар',
     )
 
