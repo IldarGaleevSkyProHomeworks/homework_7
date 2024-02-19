@@ -4,11 +4,13 @@ from rest_framework.filters import OrderingFilter
 
 from app_users.models import User, Payment
 from app_users.serializers import UserSerializer, PaymentSerializer
+from app_users.permissions import IsAnonCreate
 
 
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
+    permission_classes = (IsAnonCreate,)
 
 
 class PaymentsViewSet(viewsets.ModelViewSet):
