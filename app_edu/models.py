@@ -66,6 +66,8 @@ class Lesson(models.Model):
 
     courses = models.ManyToManyField(
         Course,
+        null=True,
+        blank=True,
         related_name='lessons',
         verbose_name='Включен в курсы'
     )
