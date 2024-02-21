@@ -38,3 +38,8 @@ class UserSerializer(serializers.ModelSerializer):
         exclude = ('is_superuser',)
 
 
+class UserSafeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('email', 'phone',)
+        read_only_fields = ('email', 'phone',)
