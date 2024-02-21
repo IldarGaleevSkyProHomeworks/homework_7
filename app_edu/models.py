@@ -1,5 +1,6 @@
 from django.db import models
 
+from app_users.models import User
 from utils.hash_storage import HashStorage, course_preview_images
 
 
@@ -20,6 +21,14 @@ class Course(models.Model):
         null=True,
         blank=True,
         verbose_name='Превью',
+    )
+
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        default=1,
+        related_name='courses',
+        verbose_name='владелец'
     )
 
     def __str__(self):
@@ -57,8 +66,18 @@ class Lesson(models.Model):
 
     courses = models.ManyToManyField(
         Course,
+        null=True,
+        blank=True,
         related_name='lessons',
         verbose_name='Включен в курсы'
+    )
+
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        default=1,
+        related_name='lessons',
+        verbose_name='владелец'
     )
 
     def __str__(self):
