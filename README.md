@@ -1,4 +1,4 @@
-# Домашняя работа 7.2
+# Домашняя работа 7.3
 
 <div align="center">
 <a href="https://wakatime.com/@IldarGaleev/projects/nijmfwmhds"><img src="https://wakatime.com/badge/user/45799db8-b1f8-4627-9264-2c8d4c352567/project/018da7e5-d70d-4460-b4eb-be7768a9c8e5.svg" alt="wakatime"></a>
