@@ -4,7 +4,6 @@ from app_edu.models import Course, Lesson
 
 
 class LessonSerializer(serializers.ModelSerializer):
-
     def create(self, validated_data):
         curr_user = self.context['request'].user
         new_lesson = super().create(validated_data)
@@ -15,6 +14,7 @@ class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
         exclude = ('courses',)
+        read_only_fields = ('owner',)
 
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -34,3 +34,4 @@ class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = '__all__'
+        read_only_fields = ('owner',)
