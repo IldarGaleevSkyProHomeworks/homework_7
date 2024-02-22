@@ -17,7 +17,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'list':
             return UserSafeSerializer
-        if self.request.user == self.get_object():
+        if self.action == 'create' or self.request.user == self.get_object() :
             return UserSerializer
         else:
             return UserSafeSerializer
