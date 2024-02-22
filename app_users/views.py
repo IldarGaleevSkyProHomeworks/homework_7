@@ -13,11 +13,10 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     permission_classes = (IsAnonCreate | IsAuthenticated,)
 
-
     def get_serializer_class(self):
         if self.action == 'list':
             return UserSafeSerializer
-        if self.action == 'create' or self.request.user == self.get_object() :
+        if self.action == 'create' or self.request.user == self.get_object():
             return UserSerializer
         else:
             return UserSafeSerializer

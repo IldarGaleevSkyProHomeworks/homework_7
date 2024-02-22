@@ -16,6 +16,7 @@ djangorestframework-simplejwt = "^5.3.1"
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.21.0"
+flake8 = "^7.0.0"
 
 [build-system]
 requires = ["poetry-core"]
