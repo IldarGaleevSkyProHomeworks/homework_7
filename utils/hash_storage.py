@@ -32,8 +32,18 @@ def _get_file_hash_path(root, ctx, instance, filename):
 
 
 def user_avatar_images(instance, filename):
-    return _get_file_hash_path('user_avatar_images', instance.avatar, instance, filename)
+    return _get_file_hash_path(
+        'user_avatar_images',
+        instance.avatar,
+        instance,
+        filename
+    )
 
 
 def course_preview_images(instance, filename):
-    return _get_file_hash_path('course_preview_images', instance.preview, instance, filename)
+    return _get_file_hash_path(
+        'course_preview_images',
+        instance.preview,
+        instance,
+        filename
+    )

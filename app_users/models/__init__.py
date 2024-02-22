@@ -1,2 +1,2 @@
-from .user_model import *
-from .payment_model import *
+from .user_model import User, UserManager
+from .payment_model import Payment
