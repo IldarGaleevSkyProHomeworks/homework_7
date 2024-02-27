@@ -2,6 +2,7 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 
 from app_edu.models import Lesson
+from app_edu.pagination import AppEduPagination
 from app_edu.serializers import LessonSerializer
 from app_users.apps import AppUsersConfig
 from app_users.permissions import IsOwner, IsManager, IsContentCreator
@@ -11,6 +12,7 @@ class LessonListViewSet(generics.ListAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = (IsAuthenticated,)
+    pagination_class = AppEduPagination
 
     def get_queryset(self):
         if self.request.user.groups.filter(name=AppUsersConfig.manager_group_name).exists():

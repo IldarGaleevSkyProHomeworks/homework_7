@@ -1,4 +1,4 @@
-# Домашняя работа 7.3
+# Домашняя работа 7.4
 
 <div align="center">
 <a href="https://wakatime.com/@IldarGaleev/projects/nijmfwmhds"><img src="https://wakatime.com/badge/user/45799db8-b1f8-4627-9264-2c8d4c352567/project/018da7e5-d70d-4460-b4eb-be7768a9c8e5.svg" alt="wakatime"></a>
@@ -18,6 +18,7 @@
 | `/accounts/users/`            | `GET`                  |                                       |                 |
 | `/accounts/users/<id>/`       | `GET`, `PUT`, `DELETE` |                                       |                 |
 | `/accounts/payments/`         | `GET`, `PUT`, `DELETE` | `payment_method`, `purchased_product` | `payment_date`  |
+| `/courses/<id>/subscribe/`    | `PUSH`,`DELETE`        |                                       |                 |
 
 ## Авторизация и регистрация
 
@@ -65,7 +66,7 @@
 
 > [!TIP]
 > Использование
-> 
+>
 > ```Bash
 > python manage.py <команда>
 > ```
