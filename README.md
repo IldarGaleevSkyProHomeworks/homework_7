@@ -18,6 +18,7 @@
 | `/accounts/users/`            | `GET`                  |                                       |                 |
 | `/accounts/users/<id>/`       | `GET`, `PUT`, `DELETE` |                                       |                 |
 | `/accounts/payments/`         | `GET`, `PUT`, `DELETE` | `payment_method`, `purchased_product` | `payment_date`  |
+| `/courses/<id>/subscribe/`    | `PUSH`,`DELETE`        |                                       |                 |
 
 ## Авторизация и регистрация
 
@@ -65,7 +66,7 @@
 
 > [!TIP]
 > Использование
-> 
+>
 > ```Bash
 > python manage.py <команда>
 > ```
