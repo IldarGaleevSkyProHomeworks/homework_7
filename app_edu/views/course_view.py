@@ -3,6 +3,7 @@ from rest_framework import viewsets, views, status
 from rest_framework.response import Response
 
 from app_edu.models import Course, Subscription
+from app_edu.pagination import AppEduPagination
 from app_edu.serializers import CourseSerializer, SubscriptionSerializer
 from app_users.apps import AppUsersConfig
 from app_users.permissions import IsManager, IsOwner, IsContentCreator
@@ -10,6 +11,7 @@ from app_users.permissions import IsManager, IsOwner, IsContentCreator
 
 class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
+    pagination_class = AppEduPagination
 
     def get_queryset(self):
         if self.action != 'list' or self.request.user.groups.filter(name=AppUsersConfig.manager_group_name).exists():
