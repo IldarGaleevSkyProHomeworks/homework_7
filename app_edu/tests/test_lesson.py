@@ -119,3 +119,31 @@ class TestsCRUDLesson(TestCase):
 
     def test_update_user_forbidden(self):
         self.check_update_lesson(self.user, status.HTTP_403_FORBIDDEN)
+
+    def test_create_with_bad_video_url_bad_request(self):
+        lesson_test_data = {
+            'name': 'Test lesson',
+            'description': 'Test Description',
+            'video_url': 'https://mysupersite.com/coolvideo'
+        }
+        self.client.force_login(self.creator)
+        url = reverse('app_edu:lesson_create')
+        response = self.client.post(url, data=lesson_test_data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def check_create_with_youtube_video_url(self, url):
+        lesson_test_data = {
+            'name': 'Test lesson',
+            'description': 'Test Description',
+            'video_url': url
+        }
+        self.client.force_login(self.creator)
+        url = reverse('app_edu:lesson_create')
+        response = self.client.post(url, data=lesson_test_data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_create_with_youtube_video_1_url_success(self):
+        self.check_create_with_youtube_video_url('https://youtu.be/qwerty123')
+
+    def test_create_with_youtube_video_2_url_success(self):
+        self.check_create_with_youtube_video_url('https://www.youtube.com/watch?v=qwerty123')
