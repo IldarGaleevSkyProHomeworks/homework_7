@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from app_edu.apps import AppEduConfig
@@ -17,7 +17,6 @@ urlpatterns = [
     path('lessons/<int:pk>/', LessonRetrieveView.as_view(), name='lesson_detail'),
     path('lessons/<int:pk>/change/', LessonUpdateView.as_view(http_method_names=['put']), name='lesson_update'),
     path('lessons/<int:pk>/delete/', LessonDeleteView.as_view(http_method_names=['delete']), name='lesson_delete'),
-    path('courses/<int:pk>/subscribe/', SubscribeUnsubscribeAPIView.as_view(), name='subscribe')
+    path('courses/<int:pk>/subscribe/', SubscribeUnsubscribeAPIView.as_view(), name='subscribe'),
+    path('', include(router.urls)),
 ]
-
-urlpatterns += router.urls
