@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
-from app_edu import validators
-from app_edu.models import Course, Lesson
+from app_edu.models import Course, Lesson, Subscription
 from app_edu.validators import VideoUrlValidator
 
 
@@ -38,3 +37,9 @@ class CourseSerializer(serializers.ModelSerializer):
         model = Course
         fields = '__all__'
         read_only_fields = ('owner',)
+
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subscription
+        fields = '__all__'
