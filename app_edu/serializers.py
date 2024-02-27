@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
+from app_edu import validators
 from app_edu.models import Course, Lesson
+from app_edu.validators import VideoUrlValidator
 
 
 class LessonSerializer(serializers.ModelSerializer):
@@ -15,6 +17,7 @@ class LessonSerializer(serializers.ModelSerializer):
         model = Lesson
         exclude = ('courses',)
         read_only_fields = ('owner',)
+        validators = [VideoUrlValidator('video_url')]
 
 
 class CourseSerializer(serializers.ModelSerializer):
