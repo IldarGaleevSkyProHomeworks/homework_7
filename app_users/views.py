@@ -28,6 +28,6 @@ class PaymentsViewSet(viewsets.ModelViewSet):
     serializer_class = PaymentSerializer
     queryset = Payment.objects.all()
     filter_backends = (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ('payment_method', 'purchased_product',)
+    filterset_fields = ('payment_method', )
     ordering_fields = ('payment_date',)
     pagination_class = AppUserPagination
