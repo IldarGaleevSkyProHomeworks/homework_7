@@ -9,16 +9,12 @@ class Subscription(models.Model):
         to=User,
         on_delete=models.CASCADE,
         related_name='subscriptions',
-        null=True,
-        blank=True,
         verbose_name='Владелец'
     )
     course = models.ForeignKey(
         to=Course,
         on_delete=models.CASCADE,
         related_name='subscriptions',
-        null=True,
-        blank=True,
         verbose_name='Курс'
     )
 
@@ -28,6 +24,6 @@ class Subscription(models.Model):
         ordering = ['id']
 
     def __str__(self):
-        user = self.user or 'Неизвестный'
-        course = self.course or 'Удалено'
-        return f'{user} подписался на {course}'
+        user = self.user
+        course = self.course
+        return f'{user} подписан на {course}'
