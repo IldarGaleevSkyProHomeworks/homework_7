@@ -3,8 +3,8 @@ from rest_framework.routers import DefaultRouter
 
 from app_edu.apps import AppEduConfig
 from app_edu.views import (CourseViewSet, LessonListViewSet, LessonRetrieveView,
-                           LessonCreateView, LessonUpdateView, LessonDeleteView)
-from app_edu.views.course_view import SubscribeUnsubscribeAPIView
+                           LessonCreateView, LessonUpdateView, LessonDeleteView,
+                           SubscribeUnsubscribeAPIView)
 
 app_name = AppEduConfig.name
 

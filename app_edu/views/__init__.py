@@ -1,3 +1,3 @@
-from .course_view import CourseViewSet
-from .lesson_view import (LessonCreateView, LessonRetrieveView, LessonUpdateView,
-                          LessonDeleteView, LessonListViewSet)
+from .course_view import *
+from .lesson_view import *
+from .subscribtion_view import *
