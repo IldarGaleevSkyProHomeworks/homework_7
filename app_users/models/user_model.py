@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
 
+from app_users.apps import AppUsersConfig
 from utils.hash_storage import user_avatar_images, HashStorage
 
 
@@ -77,6 +78,14 @@ class User(AbstractUser):
     @property
     def short_str(self):
         return f'{self.first_name}' if self.first_name else self.email
+
+    @property
+    def is_manager(self):
+        return self.groups.filter(name=AppUsersConfig.manager_group_name).exists()
+
+    @property
+    def is_creator(self):
+        return self.groups.filter(name=AppUsersConfig.content_creator_group_name).exists()
 
     def __str__(self):
         return f'{self.first_name} ({self.email})' if self.first_name else self.email

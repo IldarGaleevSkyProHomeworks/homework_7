@@ -12,10 +12,11 @@ class CourseViewSet(viewsets.ModelViewSet):
     pagination_class = AppEduPagination
 
     def get_queryset(self):
-        if self.action != 'list' or self.request.user.groups.filter(name=AppUsersConfig.manager_group_name).exists():
-            return Course.objects.all()
+        queryset = Course.objects.all()
+        if self.action != 'list' or self.request.user.is_manager:
+            return queryset
 
-        return Course.objects.filter(owner=self.request.user)
+        return queryset.filter(owner=self.request.user)
 
     def get_permissions(self):
         match self.action:
