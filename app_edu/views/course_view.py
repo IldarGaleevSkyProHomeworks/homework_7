@@ -1,5 +1,6 @@
-from django.http import Http404
 from rest_framework import viewsets, views, status
+from rest_framework.generics import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from app_edu.models import Course, Subscription
@@ -32,9 +33,10 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 
 class SubscribeUnsubscribeAPIView(views.APIView):
+    permission_classes = (IsAuthenticated,)
 
     def post(self, *args, **kwargs):
-        course = self.get_course(kwargs['pk'])
+        course = get_object_or_404(Course, pk=kwargs['pk'])
 
         subs, _ = Subscription.objects.get_or_create(user=self.request.user, course=course)
         serializer = SubscriptionSerializer(subs)
@@ -45,16 +47,9 @@ class SubscribeUnsubscribeAPIView(views.APIView):
         return Response(response, status.HTTP_201_CREATED)
 
     def delete(self, *args, **kwargs):
-        course = self.get_course(kwargs['pk'])
+        course = get_object_or_404(Course, pk=kwargs['pk'])
         Subscription.objects.filter(user=self.request.user, course=course).delete()
         response = {
             'detail': f'Курс {course.name} удален из подписок',
         }
         return Response(response, status.HTTP_204_NO_CONTENT)
-
-    @staticmethod
-    def get_course(pk):
-        course = Course.objects.filter(pk=pk)
-        if not course.exists():
-            raise Http404({"error": f"Курс с id={pk} не найден!"})
-        return course.first()
