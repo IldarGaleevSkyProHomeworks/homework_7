@@ -16,9 +16,11 @@ class UserViewSet(viewsets.ModelViewSet):
     pagination_class = AppUserPagination
 
     def get_serializer_class(self):
+        is_swagger = getattr(self, 'swagger_fake_view', False)
+
         if self.action == 'list':
             return UserSafeSerializer
-        if self.action == 'create' or self.request.user == self.get_object():
+        if is_swagger or self.action == 'create' or self.request.user == self.get_object():
             return UserSerializer
         else:
             return UserSafeSerializer

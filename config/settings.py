@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "django_filters",
+    "drf_yasg",
 
     "app_users",
     "app_edu",
@@ -66,6 +67,18 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ]
+}
+
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': True,
+    'SECURITY_DEFINITIONS': {
+        'JWT': {
+            'description': 'Bearer <token>',
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+        },
+    }
 }
 
 if DEBUG:
