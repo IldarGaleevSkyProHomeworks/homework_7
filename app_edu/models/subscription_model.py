@@ -22,6 +22,7 @@ class Subscription(models.Model):
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
         ordering = ['id']
+        unique_together = ['user', 'course', ]
 
     def __str__(self):
         user = self.user
