@@ -1,7 +1,5 @@
 from rest_framework import serializers
-from rest_framework.fields import SerializerMethodField
 
-from app_edu.models import Subscription
 from app_edu.serializers import SubscriptionSerializer
 from app_users.models import User, Payment
 
@@ -17,6 +15,9 @@ class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
         fields = '__all__'
+        swagger_schema_fields = {
+            "description": "Информация о платежах"
+        }
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -50,6 +51,9 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         exclude = ('is_superuser',)
+        swagger_schema_fields = {
+            "description": "Полная информация о пользователе"
+        }
 
 
 class UserSafeSerializer(serializers.ModelSerializer):
@@ -57,3 +61,7 @@ class UserSafeSerializer(serializers.ModelSerializer):
         model = User
         fields = ('email', 'phone',)
         read_only_fields = ('email', 'phone',)
+        swagger_schema_fields = {
+            "title": "UserPublic",
+            "description": "Публичная информация о пользователе"
+        }

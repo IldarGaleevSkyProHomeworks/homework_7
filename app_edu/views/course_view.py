@@ -11,6 +11,33 @@ from app_users.permissions import IsManager, IsOwner, IsContentCreator
 
 
 class CourseViewSet(viewsets.ModelViewSet):
+    """
+        create:
+        Создание курса.
+
+        retrieve:
+        Информация о курсе.
+
+        list:
+        Возвращает список курсов.
+
+        update:
+        Править информацию о курсе.
+
+        partial_update:
+        Править часть полей курса.
+
+        delete:
+        Удалить курс.
+
+        subscribe:
+        Подписаться на курс
+
+        unsubscribe:
+        Отписаться от курса
+
+    """
+
     serializer_class = CourseSerializer
     pagination_class = AppEduPagination
 

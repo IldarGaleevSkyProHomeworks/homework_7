@@ -15,3 +15,6 @@ class SubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subscription
         fields = '__all__'
+        swagger_schema_fields = {
+            "description": "Информация о подписке"
+        }

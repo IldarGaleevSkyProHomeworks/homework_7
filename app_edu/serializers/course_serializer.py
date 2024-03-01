@@ -22,3 +22,6 @@ class CourseSerializer(serializers.ModelSerializer):
         model = Course
         fields = '__all__'
         read_only_fields = ('owner',)
+        swagger_schema_fields = {
+            "description": "Информация о курсе"
+        }
