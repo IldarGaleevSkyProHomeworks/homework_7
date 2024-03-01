@@ -1,27 +1,11 @@
 from rest_framework import serializers
 
 from app_edu.serializers import SubscriptionSerializer
-from app_users.models import User, Payment
-
-
-class PaymentSerializer(serializers.ModelSerializer):
-    def __init__(self, *args, **kwargs):
-        remove_fields = kwargs.pop('remove_fields', None)
-        super().__init__(*args, **kwargs)
-        if remove_fields:
-            for field_name in remove_fields:
-                self.fields.pop(field_name)
-
-    class Meta:
-        model = Payment
-        fields = '__all__'
-        swagger_schema_fields = {
-            "description": "Информация о платежах"
-        }
+from app_payments.serializers import PaymentSerializer
+from app_users.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-
     password = serializers.CharField(max_length=120, write_only=True)
 
     subscriptions = SubscriptionSerializer(

@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from app_users.models import User, Payment
+from app_payments.models import Payment
+from app_users.models import User
 
 
 @admin.register(User)

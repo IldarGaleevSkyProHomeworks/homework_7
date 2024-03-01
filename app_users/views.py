@@ -1,12 +1,10 @@
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, mixins
-from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 
-from app_users.models import User, Payment
+from app_users.models import User
 from app_users.pagination import AppUserPagination
-from app_users.serializers import UserSerializer, PaymentSerializer, UserSafeSerializer
 from app_users.permissions import IsAnonCreate
+from app_users.serializers import UserSerializer, UserSafeSerializer
 
 
 class UserViewSet(
@@ -48,28 +46,3 @@ class UserViewSet(
             return UserSerializer
         else:
             return UserSafeSerializer
-
-
-class PaymentsViewSet(
-    mixins.CreateModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet
-):
-    """
-            create:
-            Создание платежа.
-
-            retrieve:
-            Информация о платеже.
-
-            list:
-            Возвращает список платежей.
-        """
-
-    serializer_class = PaymentSerializer
-    queryset = Payment.objects.all()
-    filter_backends = (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ('payment_method',)
-    ordering_fields = ('payment_date',)
-    pagination_class = AppUserPagination
