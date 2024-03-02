@@ -30,7 +30,7 @@ SECRET_KEY = env.str('SECRET_KEY', "django-insecure-x4b^@jo()78k24arp(n)ga+*z9g*
 DEBUG = env.bool('DEBUG', False)
 DISABLE_PASSWORD_VALIDATION = env.bool('DISABLE_PASSWORD_VALIDATION', False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', [])
 
 # Application definition
 
@@ -43,9 +43,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "django_filters",
+    "drf_yasg",
 
     "app_users",
     "app_edu",
+    "app_payments",
 ]
 
 MIDDLEWARE = [
@@ -68,6 +70,18 @@ REST_FRAMEWORK = {
     ]
 }
 
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': True,
+    'SECURITY_DEFINITIONS': {
+        'JWT': {
+            'description': 'Bearer <token>',
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+        },
+    }
+}
+
 if DEBUG:
     SIMPLE_JWT = {
         'ACCESS_TOKEN_LIFETIME': timedelta(days=30)
@@ -78,7 +92,9 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [
+            BASE_DIR / "templates"
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -151,3 +167,6 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "app_users.User"
+
+STRIPE_API_KEY = env.str('STRIPE_API_KEY')
+STRIPE_ENDPOINT_SECRET = env('STRIPE_ENDPOINT_SECRET')

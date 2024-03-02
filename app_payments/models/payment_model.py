@@ -1,21 +1,24 @@
 from django.db import models
 
-from .user_model import User
+from app_users.models import User
 
 from app_edu.models import Lesson, Course
 
 
 class Payment(models.Model):
-    class PaymentMethodEnum(models.IntegerChoices):
+    class PaymentStatus(models.IntegerChoices):
         unknown = 0, 'Неизвестно'
-        cash = 1, 'Наличные'
-        transfer = 2, 'Перевод на счет'
+        waited = 1, 'Ожидание оплаты'
+        paid = 2, 'Оплачено'
+        cancelled = 3, 'Отменено'
+        expired = 4, 'Время ожидания истекло'
 
     user = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
+        related_name='payments',
         verbose_name='Пользователь'
     )
 
@@ -47,10 +50,31 @@ class Payment(models.Model):
         verbose_name='Сумма оплаты'
     )
 
-    payment_method = models.PositiveSmallIntegerField(
-        choices=PaymentMethodEnum.choices,
-        default=PaymentMethodEnum.unknown,
+    payment_method = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
         verbose_name='Способ оплаты'
+    )
+
+    payment_link = models.URLField(
+        max_length=500,
+        null=True,
+        blank=True,
+        verbose_name='ссылка на оплату'
+    )
+
+    payment_link_expires_at = models.DateTimeField(
+        auto_now=False,
+        null=True,
+        blank=True,
+        verbose_name='время окончания действия ссылки',
+    )
+
+    payment_status = models.SmallIntegerField(
+        choices=PaymentStatus.choices,
+        default=PaymentStatus.unknown,
+        verbose_name='статус платежа'
     )
 
     @property

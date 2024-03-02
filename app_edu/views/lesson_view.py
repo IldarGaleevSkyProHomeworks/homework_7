@@ -9,6 +9,10 @@ from app_users.permissions import IsOwner, IsManager, IsContentCreator
 
 
 class LessonListViewSet(generics.ListAPIView):
+    """
+    Список уроков
+    """
+
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = (IsAuthenticated,)
@@ -21,24 +25,40 @@ class LessonListViewSet(generics.ListAPIView):
 
 
 class LessonRetrieveView(generics.RetrieveAPIView):
+    """
+    Информация об уроке
+    """
+
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = (IsOwner | IsManager,)
 
 
 class LessonCreateView(generics.CreateAPIView):
+    """
+    Создать урок
+    """
+
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = (IsContentCreator,)
 
 
 class LessonDeleteView(generics.DestroyAPIView):
+    """
+    Удалить урок
+    """
+
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = (IsOwner,)
 
 
 class LessonUpdateView(generics.UpdateAPIView):
+    """
+    Обновить информацию об уроке
+    """
+
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = (IsOwner | IsManager,)

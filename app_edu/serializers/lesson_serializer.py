@@ -17,3 +17,6 @@ class LessonSerializer(serializers.ModelSerializer):
         exclude = ('courses',)
         read_only_fields = ('owner',)
         validators = [VideoUrlValidator('video_url')]
+        swagger_schema_fields = {
+            "description": "Информация об уроке"
+        }

@@ -1,26 +1,11 @@
 from rest_framework import serializers
-from rest_framework.fields import SerializerMethodField
 
-from app_edu.models import Subscription
 from app_edu.serializers import SubscriptionSerializer
-from app_users.models import User, Payment
-
-
-class PaymentSerializer(serializers.ModelSerializer):
-    def __init__(self, *args, **kwargs):
-        remove_fields = kwargs.pop('remove_fields', None)
-        super().__init__(*args, **kwargs)
-        if remove_fields:
-            for field_name in remove_fields:
-                self.fields.pop(field_name)
-
-    class Meta:
-        model = Payment
-        fields = '__all__'
+from app_payments.serializers import PaymentSerializer
+from app_users.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-
     password = serializers.CharField(max_length=120, write_only=True)
 
     subscriptions = SubscriptionSerializer(
@@ -50,6 +35,9 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         exclude = ('is_superuser',)
+        swagger_schema_fields = {
+            "description": "Полная информация о пользователе"
+        }
 
 
 class UserSafeSerializer(serializers.ModelSerializer):
@@ -57,3 +45,7 @@ class UserSafeSerializer(serializers.ModelSerializer):
         model = User
         fields = ('email', 'phone',)
         read_only_fields = ('email', 'phone',)
+        swagger_schema_fields = {
+            "title": "UserPublic",
+            "description": "Публичная информация о пользователе"
+        }
