@@ -26,5 +26,5 @@ class SubscriptionStatusSerializer(StatusSerializer):
 
 
 class SubscriptionDeleteStatusSerializer(StatusSerializer):
-    data = None
     deleted = serializers.IntegerField()
+

@@ -22,7 +22,7 @@ class CourseSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         updated_course = super().update(instance, validated_data)
-        course_post_update.send(Course, instance=updated_course)
+        course_post_update.send(Course, instance=updated_course, updates=validated_data)
         return updated_course
 
     class Meta:

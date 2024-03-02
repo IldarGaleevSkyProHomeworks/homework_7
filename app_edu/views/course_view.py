@@ -9,6 +9,9 @@ from app_edu.models import Course, Subscription
 from app_edu.pagination import AppEduPagination
 from app_edu.serializers import CourseSerializer, SubscriptionSerializer, SubscriptionStatusSerializer, \
     SubscriptionDeleteStatusSerializer
+from app_payments.models import Payment
+from app_payments.serializers import PaymentStatusSerializer
+from app_payments.services.stripe import create_invoice_for_user, get_or_create_payment
 from app_users.permissions import IsManager, IsOwner, IsContentCreator
 from utils.serializers import StatusSerializer
 
@@ -57,7 +60,7 @@ class CourseViewSet(viewsets.ModelViewSet):
                 self.permission_classes = (IsAuthenticated, IsContentCreator,)
             case 'destroy':
                 self.permission_classes = (IsAuthenticated, IsOwner,)
-            case 'subscribe' | 'unsubscribe':
+            case 'subscribe' | 'unsubscribe' | 'buy':
                 self.permission_classes = (IsAuthenticated,)
             case _:
                 self.permission_classes = (IsAuthenticated, IsOwner | IsManager,)
@@ -107,4 +110,37 @@ class CourseViewSet(viewsets.ModelViewSet):
         return Response(
             SubscriptionDeleteStatusSerializer(response).data,
             status.HTTP_200_OK
+        )
+
+    @swagger_auto_schema(
+        operation_description="Купить курс",
+        responses={
+            status.HTTP_102_PROCESSING: StatusSerializer(),
+            status.HTTP_201_CREATED: None
+        },
+        request_body=no_body
+    )
+    @action(detail=True, methods=['post'])
+    def buy(self, request, pk: int = None):
+        curr_user = request.user
+        course = get_object_or_404(Course, pk=pk)
+        payment = get_or_create_payment(user_id=curr_user.pk, course_id=course.pk)
+
+        response = {
+            'status': payment.payment_status,
+            'data': payment
+        }
+
+        if payment.payment_status == Payment.PaymentStatus.paid:
+            response['detail'] = 'Вы уже оплатили этот курс.'
+        elif payment.payment_status == Payment.PaymentStatus.waited and payment.payment_link:
+            response['detail'] = 'Счет уже выставлен и ждет оплаты.'
+        else:
+            create_invoice_for_user(user_id=curr_user.pk, course_id=course.pk, base_url=request.get_host())
+            response['detail'] = ('Платеж создан. Ссылка на оплату доступна в платежах. '
+                                  'Если ссылка отстутствует повторите запрос через некоторое время.')
+
+        return Response(
+            data=PaymentStatusSerializer(response).data,
+            status=status.HTTP_200_OK
         )

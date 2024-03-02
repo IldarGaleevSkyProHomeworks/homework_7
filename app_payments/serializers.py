@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from app_payments.models import Payment
+from utils.serializers import StatusSerializer
 
 
 class PaymentSerializer(serializers.ModelSerializer):
@@ -17,3 +18,7 @@ class PaymentSerializer(serializers.ModelSerializer):
         swagger_schema_fields = {
             "description": "Информация о платежах"
         }
+
+
+class PaymentStatusSerializer(StatusSerializer):
+    data = PaymentSerializer()

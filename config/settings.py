@@ -30,7 +30,7 @@ SECRET_KEY = env.str('SECRET_KEY', "django-insecure-x4b^@jo()78k24arp(n)ga+*z9g*
 DEBUG = env.bool('DEBUG', False)
 DISABLE_PASSWORD_VALIDATION = env.bool('DISABLE_PASSWORD_VALIDATION', False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', [])
 
 # Application definition
 
@@ -169,3 +169,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "app_users.User"
 
 STRIPE_API_KEY = env.str('STRIPE_API_KEY')
+STRIPE_ENDPOINT_SECRET = env('STRIPE_ENDPOINT_SECRET')
