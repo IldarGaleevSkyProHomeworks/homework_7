@@ -1,14 +1,28 @@
+import django.db.models.signals as django_orm_signals
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 
+import app_edu.signals as edu_signals
+import app_payments.apps
 from app_edu.models import Course
 from app_users.apps import AppUsersConfig
 
 
 class TestsCRUDCourse(TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        edu_signals.course_post_create.disconnect(sender=Course, dispatch_uid=app_payments.apps.AppPaymentsConfig.name)
+        edu_signals.course_post_update.disconnect(sender=Course, dispatch_uid=app_payments.apps.AppPaymentsConfig.name)
+        django_orm_signals.pre_delete.disconnect(sender=Course, dispatch_uid=app_payments.apps.AppPaymentsConfig.name)
+
+    @classmethod
+    def tearDownClass(cls):
+        pass
+
     def setUp(self):
         moder_group, _ = Group.objects.get_or_create(name=AppUsersConfig.manager_group_name)
         creator_group, _ = Group.objects.get_or_create(name=AppUsersConfig.content_creator_group_name)
