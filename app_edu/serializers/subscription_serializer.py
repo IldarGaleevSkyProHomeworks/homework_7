@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from utils.serializers import StatusSerializer
 
 from app_edu.models import Subscription
 
@@ -18,3 +19,12 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         swagger_schema_fields = {
             "description": "Информация о подписке"
         }
+
+
+class SubscriptionStatusSerializer(StatusSerializer):
+    data = SubscriptionSerializer()
+
+
+class SubscriptionDeleteStatusSerializer(StatusSerializer):
+    data = None
+    deleted = serializers.IntegerField()

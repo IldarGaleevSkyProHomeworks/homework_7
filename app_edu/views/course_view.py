@@ -1,3 +1,4 @@
+from drf_yasg.utils import swagger_auto_schema, no_body
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
@@ -6,8 +7,10 @@ from rest_framework.response import Response
 
 from app_edu.models import Course, Subscription
 from app_edu.pagination import AppEduPagination
-from app_edu.serializers import CourseSerializer, SubscriptionSerializer
+from app_edu.serializers import CourseSerializer, SubscriptionSerializer, SubscriptionStatusSerializer, \
+    SubscriptionDeleteStatusSerializer
 from app_users.permissions import IsManager, IsOwner, IsContentCreator
+from utils.serializers import StatusSerializer
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -61,6 +64,13 @@ class CourseViewSet(viewsets.ModelViewSet):
 
         return [permission() for permission in self.permission_classes]
 
+    @swagger_auto_schema(
+        responses={
+            status.HTTP_200_OK: SubscriptionStatusSerializer(),
+            status.HTTP_201_CREATED: SubscriptionStatusSerializer(),
+        },
+        request_body=no_body
+    )
     @action(detail=True, methods=['post'])
     def subscribe(self, request, pk: int = None):
         course = get_object_or_404(Course, pk=pk)
@@ -69,7 +79,7 @@ class CourseViewSet(viewsets.ModelViewSet):
         )
 
         response = {
-            'results': SubscriptionSerializer(subs).data,
+            'data': SubscriptionSerializer(subs).data,
         }
         if is_created:
             response['detail'] = 'Курс сохранен в подписки'
@@ -78,8 +88,13 @@ class CourseViewSet(viewsets.ModelViewSet):
             response['detail'] = 'Вы уже подписаны на данный курс'
             status_code = status.HTTP_200_OK
 
-        return Response(response, status_code)
+        return Response(StatusSerializer(response).data, status_code)
 
+    @swagger_auto_schema(
+        responses={
+            status.HTTP_200_OK: SubscriptionDeleteStatusSerializer()
+        }
+    )
     @action(detail=True, methods=['delete'])
     def unsubscribe(self, request, pk: int = None):
         course = get_object_or_404(Course, pk=pk)
@@ -90,6 +105,6 @@ class CourseViewSet(viewsets.ModelViewSet):
         }
 
         return Response(
-            response,
+            SubscriptionDeleteStatusSerializer(response).data,
             status.HTTP_200_OK
         )
