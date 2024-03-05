@@ -2,21 +2,21 @@ from django.db.models import signals as model_signals
 
 from app_edu import signals as app_edu_signals
 from app_edu.models import Course
-from app_payments.services import stripe
+from app_payments import tasks
 
 
 def handler_create_course(sender, instance: Course, **kwargs):
-    stripe.create_product_course(instance.pk)
+    tasks.create_product_course_task.delay(instance.pk)
 
 
 def handler_update_course(sender, instance: Course, updates, **kwargs):
-    stripe.update_product_course(instance.pk, updates)
+    tasks.update_product_course_task.delay(instance.pk, updates)
 
 
 def handler_delete_course(sender, instance: Course, **kwargs):
     stripe_products = instance.stripeproductcourse_set.all()
     if stripe_products.exists():
-        stripe.delete_product_course(stripe_products.first().stripe_product_id)
+        tasks.delete_product_course_task.delay(stripe_products.first().stripe_product_id)
 
 
 def init_signals(dispatch_uid):
