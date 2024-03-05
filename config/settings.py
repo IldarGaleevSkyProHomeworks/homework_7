@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_filters",
     "drf_yasg",
+    "django_celery_beat",
 
     "app_users",
     "app_edu",
@@ -173,3 +174,12 @@ STRIPE_ENDPOINT_SECRET = env('STRIPE_ENDPOINT_SECRET')
 
 CELERY_BROKER_URL = env.str('CELERY_BROKER_URL', 'redis://127.0.0.1:6379/0')
 CELERY_RESULT_BACKEND = env.str('CELERY_RESULT_BACKEND', 'redis://127.0.0.1:6379/0')
+
+CELERY_BEAT_SCHEDULE = {
+    'Stripe status poll': {
+        'task': 'app_payments.tasks.stripe_poll_status',
+        'schedule': timedelta(seconds=env.int('STRIPE_STATE_POLL_INTERVAL', 10)),
+    },
+}
+
+CELERY_TASK_RETRY_COUNT = env.int('CELERY_TASK_RETRY_COUNT', 2)
