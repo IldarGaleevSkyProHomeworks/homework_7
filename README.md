@@ -1,4 +1,4 @@
-# Домашняя работа 7.5
+# Домашняя работа 7.6
 
 <div align="center">
 <a href="https://wakatime.com/@IldarGaleev/projects/nijmfwmhds"><img src="https://wakatime.com/badge/user/45799db8-b1f8-4627-9264-2c8d4c352567/project/018da7e5-d70d-4460-b4eb-be7768a9c8e5.svg" alt="wakatime"></a>
@@ -74,6 +74,14 @@
 |--------------------------|-------------------------------|
 | `STRIPE_API_KEY`         | Ключ для доступа к API Stripe |
 | `STRIPE_ENDPOINT_SECRET` | Токен для доступа к веб-хуку  |
+
+## Celery
+
+| Переменная                                  | Назначение                                                                   |
+|---------------------------------------------|------------------------------------------------------------------------------|
+| `INACTIVE_USERS_INTERVAL`                   | Интервал (дни) по истечении которого пользователь будет считаться неактивным |
+| `CELERY_BROKER_URL`,`CELERY_RESULT_BACKEND` | Брокеры для Celery                                                           |
+| `CELERY_TASK_RETRY_COUNT`                   | Число повторных попыток для неуспешных задач                                 |
 
 ### Команды Django
 
