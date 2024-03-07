@@ -152,6 +152,7 @@ else:
 LANGUAGE_CODE = env.str('LANGUAGE_CODE', 'en-us')
 
 TIME_ZONE = env.str('TIME_ZONE', 'UTC')
+CELERY_TIMEZONE = TIME_ZONE
 
 USE_I18N = True
 
@@ -170,6 +171,9 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "app_users.User"
 
+INACTIVE_USERS_INTERVAL = timedelta(days=env.int('INACTIVE_USERS_INTERVAL', 30))
+INACTIVE_USERS_CHECK_INTERVAL = INACTIVE_USERS_INTERVAL / 2
+
 STRIPE_API_KEY = env.str('STRIPE_API_KEY')
 STRIPE_ENDPOINT_SECRET = env('STRIPE_ENDPOINT_SECRET')
 
@@ -181,6 +185,12 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'app_payments.tasks.stripe_poll_status',
         'schedule': timedelta(seconds=env.int('STRIPE_STATE_POLL_INTERVAL', 10)),
     },
+
+    'Disable inactive users': {
+        'task': 'app_users.tasks.disable_inactive_users_task',
+        'schedule': INACTIVE_USERS_CHECK_INTERVAL,
+        'relative': True,
+    }
 }
 
 CELERY_TASK_RETRY_COUNT = env.int('CELERY_TASK_RETRY_COUNT', 2)
