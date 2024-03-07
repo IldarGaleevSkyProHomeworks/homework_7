@@ -16,6 +16,10 @@ environs = {extras = ["django"], version = "^10.3.0"}
 psycopg2-binary = "^2.9.9"
 drf-yasg = "^1.21.7"
 stripe = "^8.5.0"
+celery = "^5.3.6"
+eventlet = "^0.35.2"
+redis = "^5.0.2"
+django-celery-beat = "^2.6.0"
 
 
 [tool.poetry.group.dev.dependencies]

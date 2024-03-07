@@ -17,23 +17,6 @@ stripe_api.api_key = settings.STRIPE_API_KEY
 logging = py_log.getLogger(__name__)
 
 
-def fake_task(func):
-    """
-    TODO: be replaced by a task manager later...
-    """
-
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        try:
-            # TODO: be placed to task queue ...
-            func(*args, **kwargs)
-        except Exception as e:
-            logging.error(e)
-            return None
-
-    return wrapper
-
-
 def _create_product_course(course_id):
     cached_product = StripeProductCourse.objects.filter(course_id=course_id)
     if cached_product.exists():
@@ -77,12 +60,10 @@ def get_or_create_stripe_product(course_id) -> StripeProductCourse:
     return _create_product_course(course_id)
 
 
-@fake_task
 def create_product_course(course_id):
     _create_product_course(course_id)
 
 
-@fake_task
 def delete_product_course(stripe_product_id):
     stripe_api.Product.modify(
         stripe_product_id,
@@ -90,7 +71,6 @@ def delete_product_course(stripe_product_id):
     )
 
 
-@fake_task
 def update_product_course(course_id, updates):
     updated_course = StripeProductCourse.objects.filter(course_id=course_id).first()
     if updated_course is None:
@@ -126,7 +106,6 @@ def get_or_create_payment(user_id, course_id):
     return payment
 
 
-@fake_task
 def create_invoice_for_user(user_id, course_id, base_url):
     payment = get_or_create_payment(user_id, course_id)
 
@@ -164,7 +143,6 @@ def create_invoice_for_user(user_id, course_id, base_url):
         ).save()
 
 
-@fake_task
 def stripe_poll_status():
     sessions = StripeSession.objects.all()
     for session in sessions:

@@ -28,6 +28,7 @@ SECRET_KEY = env.str('SECRET_KEY', "django-insecure-x4b^@jo()78k24arp(n)ga+*z9g*
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', False)
+DEBUG_MAIL = env.bool('DEBUG_MAIL', False)
 DISABLE_PASSWORD_VALIDATION = env.bool('DISABLE_PASSWORD_VALIDATION', False)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', [])
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_filters",
     "drf_yasg",
+    "django_celery_beat",
 
     "app_users",
     "app_edu",
@@ -150,6 +152,7 @@ else:
 LANGUAGE_CODE = env.str('LANGUAGE_CODE', 'en-us')
 
 TIME_ZONE = env.str('TIME_ZONE', 'UTC')
+CELERY_TIMEZONE = TIME_ZONE
 
 USE_I18N = True
 
@@ -168,5 +171,40 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "app_users.User"
 
+INACTIVE_USERS_INTERVAL = timedelta(days=env.int('INACTIVE_USERS_INTERVAL', 30))
+INACTIVE_USERS_CHECK_INTERVAL = INACTIVE_USERS_INTERVAL / 2
+
 STRIPE_API_KEY = env.str('STRIPE_API_KEY')
 STRIPE_ENDPOINT_SECRET = env('STRIPE_ENDPOINT_SECRET')
+
+CELERY_BROKER_URL = env.str('CELERY_BROKER_URL', 'redis://127.0.0.1:6379/0')
+CELERY_RESULT_BACKEND = env.str('CELERY_RESULT_BACKEND', 'redis://127.0.0.1:6379/0')
+
+CELERY_BEAT_SCHEDULE = {
+    'Stripe status poll': {
+        'task': 'app_payments.tasks.stripe_poll_status',
+        'schedule': timedelta(seconds=env.int('STRIPE_STATE_POLL_INTERVAL', 10)),
+    },
+
+    'Disable inactive users': {
+        'task': 'app_users.tasks.disable_inactive_users_task',
+        'schedule': INACTIVE_USERS_CHECK_INTERVAL,
+        'relative': True,
+    }
+}
+
+CELERY_TASK_RETRY_COUNT = env.int('CELERY_TASK_RETRY_COUNT', 2)
+
+if DEBUG_MAIL:
+    EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+    EMAIL_FILE_PATH = BASE_DIR / 'tmp/email'
+else:
+    EMAIL_BACKEND = env.str('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
+    EMAIL_FILE_PATH = env.str('EMAIL_FILE_PATH', None)
+    EMAIL_HOST = env.str('EMAIL_HOST')
+    EMAIL_PORT = env.int('EMAIL_PORT', 465)
+    EMAIL_HOST_USER = env.str('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD')
+    EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', False)
+    EMAIL_USE_SSL = env.bool('EMAIL_USE_SSL', True)
+    DEFAULT_FROM_EMAIL = env.str('DEFAULT_FROM_EMAIL')

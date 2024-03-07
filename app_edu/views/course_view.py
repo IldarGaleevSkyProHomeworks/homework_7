@@ -11,7 +11,8 @@ from app_edu.serializers import CourseSerializer, SubscriptionSerializer, Subscr
     SubscriptionDeleteStatusSerializer
 from app_payments.models import Payment
 from app_payments.serializers import PaymentStatusSerializer
-from app_payments.services.stripe import create_invoice_for_user, get_or_create_payment
+from app_payments.services import stripe
+from app_payments import tasks
 from app_users.permissions import IsManager, IsOwner, IsContentCreator
 from utils.serializers import StatusSerializer
 
@@ -124,7 +125,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     def buy(self, request, pk: int = None):
         curr_user = request.user
         course = get_object_or_404(Course, pk=pk)
-        payment = get_or_create_payment(user_id=curr_user.pk, course_id=course.pk)
+        payment = stripe.get_or_create_payment(user_id=curr_user.pk, course_id=course.pk)
 
         response = {
             'status': payment.payment_status,
@@ -136,7 +137,7 @@ class CourseViewSet(viewsets.ModelViewSet):
         elif payment.payment_status == Payment.PaymentStatus.waited and payment.payment_link:
             response['detail'] = 'Счет уже выставлен и ждет оплаты.'
         else:
-            create_invoice_for_user(user_id=curr_user.pk, course_id=course.pk, base_url=request.get_host())
+            tasks.create_invoice_for_user_task.delay(user_id=curr_user.pk, course_id=course.pk, base_url=request.get_host())
             response['detail'] = ('Платеж создан. Ссылка на оплату доступна в платежах. '
                                   'Если ссылка отстутствует повторите запрос через некоторое время.')
 
