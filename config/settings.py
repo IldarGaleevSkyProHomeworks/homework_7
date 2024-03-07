@@ -28,6 +28,7 @@ SECRET_KEY = env.str('SECRET_KEY', "django-insecure-x4b^@jo()78k24arp(n)ga+*z9g*
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', False)
+DEBUG_MAIL = env.bool('DEBUG_MAIL', False)
 DISABLE_PASSWORD_VALIDATION = env.bool('DISABLE_PASSWORD_VALIDATION', False)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', [])
@@ -183,3 +184,17 @@ CELERY_BEAT_SCHEDULE = {
 }
 
 CELERY_TASK_RETRY_COUNT = env.int('CELERY_TASK_RETRY_COUNT', 2)
+
+if DEBUG_MAIL:
+    EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+    EMAIL_FILE_PATH = BASE_DIR / 'tmp/email'
+else:
+    EMAIL_BACKEND = env.str('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
+    EMAIL_FILE_PATH = env.str('EMAIL_FILE_PATH', None)
+    EMAIL_HOST = env.str('EMAIL_HOST')
+    EMAIL_PORT = env.int('EMAIL_PORT', 465)
+    EMAIL_HOST_USER = env.str('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD')
+    EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', False)
+    EMAIL_USE_SSL = env.bool('EMAIL_USE_SSL', True)
+    DEFAULT_FROM_EMAIL = env.str('DEFAULT_FROM_EMAIL')
