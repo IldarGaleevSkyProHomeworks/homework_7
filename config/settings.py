@@ -32,7 +32,11 @@ DEBUG_MAIL = env.bool('DEBUG_MAIL', False)
 DISABLE_PASSWORD_VALIDATION = env.bool('DISABLE_PASSWORD_VALIDATION', False)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', [])
+CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', [])
+CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', [])
 
+CORS_ALLOW_ALL_ORIGINS = False
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Application definition
 
 INSTALLED_APPS = [
@@ -46,6 +50,7 @@ INSTALLED_APPS = [
     "django_filters",
     "drf_yasg",
     "django_celery_beat",
+    "corsheaders",
 
     "app_users",
     "app_edu",
@@ -55,6 +60,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -162,6 +168,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "static"
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -192,6 +200,14 @@ CELERY_BEAT_SCHEDULE = {
         'relative': True,
     }
 }
+
+APPLICATION_SCHEME = env.str('APPLICATION_SCHEME', 'https')
+APPLICATION_HOSTNAME = env.str('APPLICATION_HOSTNAME', 'localhost')
+if APPLICATION_HOSTNAME:
+    ALLOWED_HOSTS.append(APPLICATION_HOSTNAME)
+    CORS_ALLOWED_ORIGINS.append(f'{APPLICATION_SCHEME}://{APPLICATION_HOSTNAME}')
+    CSRF_TRUSTED_ORIGINS.append(f'{APPLICATION_SCHEME}://{APPLICATION_HOSTNAME}')
+
 
 CELERY_TASK_RETRY_COUNT = env.int('CELERY_TASK_RETRY_COUNT', 2)
 
