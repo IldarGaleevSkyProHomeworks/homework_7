@@ -113,7 +113,7 @@ def create_invoice_for_user(user_id, course_id, base_url):
         product = get_or_create_stripe_product(course_id)
 
         # TODO: scheme hardcoded!
-        success_url = f'http://{base_url}{reverse_lazy("app_payments:payments-success", kwargs={"pk": payment.pk})}'
+        success_url = f'{settings.APPLICATION_SCHEME}://{base_url}{reverse_lazy("app_payments:payments-success", kwargs={"pk": payment.pk})}'
         # cancel_url = f'http://{base_url}{reverse_lazy("app_payments:payments-cancel", kwargs={"pk": payment.pk})}'
 
         session_info = stripe_api.checkout.Session.create(
